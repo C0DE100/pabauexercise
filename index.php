@@ -21,7 +21,7 @@ function followPath($matrix) {
     $letters = "";
     $path = "";
 
-    while ($currentChar === 's'){
+    while ($currentChar !== 's'){
         $path .= $currentChar;                    
         $nextPosition = getNextPosition($matrix, $currentPosition, $previousPosition);
         if ($nextPosition === null) {
