@@ -1,58 +1,53 @@
 <?php
-
-// follow a path of characters
-// collect letters
-
-// start at ">"
-// Follow the path
-// Collect letters
-// Stop on s
-
-// Input: A matrix representing the grid, it can be constant
-
-// Output:
-// - Path
-// - Letters
-// ● The only valid characters are all uppercase letters (A-Z)
-// ● Turns can be letters or +
-
 $matrix = [
-    [">","-","-","-","A","-","@","-","+"],
-    [" "," "," "," "," "," "," "," ","|"],
-    ["+","-","U","-","+"," "," "," ","C"],
-    ["|"," "," "," ","|"," "," "," ","|"],
-    ["s"," "," "," ","C","-","-","-","+"]
+   [">","-","-","-","A","-","@","-","+"],
+   [" "," "," "," "," "," "," "," ","|"],
+   ["+","-","U","-","+"," "," "," ","C"],
+   ["|"," "," "," ","|"," "," "," ","|"],
+   ["s"," "," "," ","C","-","-","-","+"]
 ];
 
 function followPath($matrix) {
-    $currentPosition = getStartingPosition($matrix);
-    $previousPosition = "";
+    //Im initially setting the current position to the start position
+    $currentPosition = getStartingPosition($matrix); 
+
+    //No previus position since we just started iterating
+    $previousPosition = null;
+
+    // first character is >
     $currentChar = $matrix[$currentPosition[0]][$currentPosition[1]];
+
+    //initializing empty variables
     $letters = "";
     $path = "";
 
-    while ($currentChar !== 's') {
-        $path .= $currentChar;
-        $nextPosition = getNextPosition($matrix, $currentPosition,$previousPosition);
+    while ($currentChar === 's'){
+        $path .= $currentChar;                    
+        $nextPosition = getNextPosition($matrix, $currentPosition, $previousPosition);
+        if ($nextPosition === null) {
+            break;
+        }
         $nextChar = $matrix[$nextPosition[0]][$nextPosition[1]];
 
-        if (isUpperCaseLetter($nextChar)) {
+        if (ctype_upper($nextChar)) {
             $letters .= $nextChar;
         }
         $previousPosition = $currentPosition;
         $currentPosition = $nextPosition;
         $currentChar = $nextChar;
+    };
 
-    }
+    $path .= 's';
+    echo "<h2>Path: " . $path . "</h2>";
+    echo "<h2>Letters: " . $letters . "</h2>";
 }
 
-function getNextPosition($matrix, $currentPosition, $previousPosition = "") {
-
+function getNextPosition($matrix, $currentPosition, $previousPosition = null) {
     $y = $currentPosition[0];
     $x = $currentPosition[1];
 
     //always move right from the starting position
-    if ($previousPosition === "" && [$y, $x] === getStartingPosition($matrix)) {
+    if ($previousPosition === null && $currentPosition === getStartingPosition($matrix)) {
         return [$y, $x + 1];
     }
 
@@ -67,49 +62,25 @@ function getNextPosition($matrix, $currentPosition, $previousPosition = "") {
         $newY = $y + $direction[0];
         $newX = $x + $direction[1];
 
-        if (($matrix[$newY][$newX] != ' ') &&
-            ([$newY, $newX] != $previousPosition)) {
+        if (isset($matrix[$newY][$newX]) &&
+            $matrix[$newY][$newX] != ' ' &&
+            [$newY, $newX] != $previousPosition) {
             return [$newY, $newX];
         }
     }
 
+    return null;
 }
 
-// Helper functions
 function getStartingPosition($matrix) {
-    for ($i = 0; $i < count($matrix); $i++){
-        for ($j = 0; $j < count($matrix[$i]); $j++){  
-            if (isMatch($matrix[$i][$j], '>')){
+    for ($i = 0; $i < count($matrix); $i++) {
+        for ($j = 0; $j < count($matrix[$i]); $j++) {
+            if ($matrix[$i][$j] === '>') {
                 return [$i, $j];
             }
         }
     }
 }
 
-function isMatch($coordinates, $character) {
-        return $coordinates === $character;
-}
-
-function isUpperCaseLetter($character) {
-    return ctype_upper($character);
-}
-
 followPath($matrix);
 ?>
-
-<!-- function followPath($matrix){
-    $startingPosition = getStartingPosition($matrix);
-    $currentPosition = $startingPosition;
-    $previousPosition = "";
-    $letters = "";
-    $path = "";
-
-    while ($currentPosition !== 's'){
-        $nextPosition = getNextPosition($matrix,$currentPosition,$previousPosition);
-
-        if (isUpperCaseLetter($nextPosition)) {
-            $letters .= $matrix[]
-        }
-
-    }
-} -->
