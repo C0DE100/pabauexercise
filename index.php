@@ -13,7 +13,6 @@
 // Output:
 // - Path
 // - Letters
-
 // ● The only valid characters are all uppercase letters (A-Z)
 // ● Turns can be letters or +
 
@@ -28,62 +27,49 @@ $matrix = [
 function followPath($matrix) {
     $currentPosition = getStartingPosition($matrix);
     $previousPosition = "";
+    $currentChar = $matrix[$currentPosition[0]][$currentPosition[1]];
     $letters = "";
     $path = "";
 
     while ($currentChar !== 's') {
-        $currentChar = $matrix[$currentPosition[0]][$currentPosition[1]];
         $path .= $currentChar;
+        $nextPosition = getNextPosition($matrix, $currentPosition,$previousPosition);
+        $nextChar = $matrix[$nextPosition[0]][$nextPosition[1]];
 
-        if (isUpperCaseLetter($currentChar)) {
-            $letters .= $currentChar;
+        if (isUpperCaseLetter($nextChar)) {
+            $letters .= $nextChar;
         }
-
-        $nextPosition = getNextPosition($matrix, $currentPosition, $previousPosition);
-
-        // Stop if no movement is possible or reached the end
-        if ($nextPosition == $currentPosition) {
-            break;
-        }
-
-        // Update previous and current positions
         $previousPosition = $currentPosition;
         $currentPosition = $nextPosition;
+        $currentChar = $nextChar;
+
     }
-
-    echo "Path: " . $path . "<br>";
-    echo "Letters: " . $letters . "<br>";
 }
-
 
 function getNextPosition($matrix, $currentPosition, $previousPosition = "") {
 
-    $x = $currentPosition[0];
-    $y = $currentPosition[1];
+    $y = $currentPosition[0];
+    $x = $currentPosition[1];
 
     //always move right from the starting position
-    if ($previousPosition === "" && [$x, $y] === getStartingPosition($matrix)) {
-        return [$x, $y + 1];
+    if ($previousPosition === "" && [$y, $x] === getStartingPosition($matrix)) {
+        return [$y, $x + 1];
     }
 
     $directions = [
-        [0, -1], // go left
-        [0, 1],  // go right
-        [1, 0],  // go down
-        [-1, 0]  // goup
+        [0, -1], // go left x
+        [0, 1],  // go right x
+        [1, 0],  // go down y
+        [-1, 0]  // go up y
     ];
 
     foreach ($directions as $direction) {
-        $newX = $x + $direction[0];
-        $newY = $y + $direction[1];
+        $newY = $y + $direction[0];
+        $newX = $x + $direction[1];
 
-        if (($matrix[$newX][$newY] === 's')) {
-            return false;
-        }
-
-        if (($matrix[$newX][$newY] != ' ') &&
-            ([$newX, $newY] != $previousPosition)) {
-            return [$newX, $newY];
+        if (($matrix[$newY][$newX] != ' ') &&
+            ([$newY, $newX] != $previousPosition)) {
+            return [$newY, $newX];
         }
     }
 
@@ -105,7 +91,7 @@ function isMatch($coordinates, $character) {
 }
 
 function isUpperCaseLetter($character) {
-    return ctype_upper($char);
+    return ctype_upper($character);
 }
 
 followPath($matrix);
