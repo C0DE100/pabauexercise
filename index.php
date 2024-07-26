@@ -1,27 +1,14 @@
 <?php
-$matrix = [
-   [">","-","-","-","A","-","@","-","+"],
-   [" "," "," "," "," "," "," "," ","|"],
-   ["+","-","U","-","+"," "," "," ","C"],
-   ["|"," "," "," ","|"," "," "," ","|"],
-   ["s"," "," "," ","C","-","-","-","+"]
-];
 
 function followPath($matrix) {
-    //Im initially setting the current position to the start position
-    $currentPosition = getStartingPosition($matrix); 
-
-    //No previus position since we just started iterating
+    $currentPosition = getStartingPosition($matrix);
     $previousPosition = null;
-
-    // first character is >
     $currentChar = $matrix[$currentPosition[0]][$currentPosition[1]];
 
-    //initializing empty variables
     $letters = "";
     $path = "";
 
-    while ($currentChar !== 's'){
+    while ($currentChar !== 's') {
         $path .= $currentChar;                    
         $nextPosition = getNextPosition($matrix, $currentPosition, $previousPosition);
         if ($nextPosition === null) {
@@ -35,18 +22,19 @@ function followPath($matrix) {
         $previousPosition = $currentPosition;
         $currentPosition = $nextPosition;
         $currentChar = $nextChar;
-    };
+    }
 
     $path .= 's';
-    echo "<h2>Path: " . $path . "</h2>";
-    echo "<h2>Letters: " . $letters . "</h2>";
+    echo "Path: " . $path . "<br>";
+    echo "Letters: " . $letters;
 }
+
 
 function getNextPosition($matrix, $currentPosition, $previousPosition = null) {
     $y = $currentPosition[0];
     $x = $currentPosition[1];
 
-    //always move right from the starting position
+    // Always move right from the starting position
     if ($previousPosition === null && $currentPosition === getStartingPosition($matrix)) {
         return [$y, $x + 1];
     }
@@ -55,7 +43,7 @@ function getNextPosition($matrix, $currentPosition, $previousPosition = null) {
         [0, -1], // go left x
         [0, 1],  // go right x
         [1, 0],  // go down y
-        [-1, 0]  // go up y
+        [-1, 0]  // go Up y
     ];
 
     foreach ($directions as $direction) {
@@ -81,6 +69,33 @@ function getStartingPosition($matrix) {
         }
     }
 }
+$matrixExample = [
+    [">", "-", "-", "-", "A", "-", "-", "-", "+"],
+    [" ", " ", " ", " ", " ", " ", " ", " ", "|"],
+    ["s", "-", "B", "-", "+", " ", " ", " ", "C"],
+    [" ", " ", " ", " ", "|", " ", " ", " ", "|"],
+    [" ", " ", " ", " ", "+", "-", "-", "-", "+"]
+ ];
 
-followPath($matrix);
+$matrixAssignment = [
+    [">", "-", "-", "-", "A", "-", "@", "-", "+"],
+    [" ", " ", " ", " ", " ", " ", " ", " ", "|"],
+    ["+", "-", "U", "-", "+", " ", " ", " ", "C"],
+    ["|", " ", " ", " ", "|", " ", " ", " ", "|"],
+    ["s", " ", " ", " ", "C", "-", "-", "-", "+"]
+ ];
+
+
 ?>
+<h1>Pabau internship Challenge</h1>
+<div style="display:flex">
+    <div style="border:2px solid black; border-radius: 5px; width:33%; padding:20px; margin-right:30px">
+        <h2>Matrix Example</h2>
+        <p><?= followPath($matrixExample) ?></p>
+    </div>
+
+    <div style="border:2px solid black; border-radius: 5px; width:33%; padding:20px;">
+        <h2>Matrix Assignement</h2>
+        <p><?= followPath($matrixAssignment) ?></p>
+    </div>
+</div>
